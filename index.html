@@ -1,55 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas</title>
+
+    <!-- Fuentes e iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
-    <link rel="stylesheet" href="diseño gestor.css"
-    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="diseño gestor.css">
 </head>
 <body>
-    
+
 <div class="container">
 
+    <!-- 🔐 LOGIN -->
+    <div id="login">
+        <h1>Iniciar sesión</h1>
+        <span>Accede a tu gestor de tareas</span>
 
- <div class="Perfil">
-     <div class="fecha">25 de enero del 2026</div>
-     <h1>Gestor Tareas</h1>
-     <span>Agrega la tarea a realizar</span>
-    
+        <div class="Agregar-tarea">
+            <input type="text" id="usuario" placeholder="Usuario">
+        </div>
+
+        <div class="Agregar-tarea">
+            <input type="password" id="password" placeholder="Contraseña">
+        </div>
+
+        <button id="loginBtn">Entrar</button>
+    </div>
+
+    <!-- 🏠 APP -->
+    <div id="app" style="display:none;">
+
+        <div class="Perfil">
+            <div class="fecha" id="fecha"></div>
+            <h1>Gestor Tareas</h1>
+            <span id="bienvenida"></span>
+        </div>
+
+        <div class="Agregar-tarea">
+            <input type="text" id="input" placeholder="Agregar una tarea">
+            <i id="enter" class="fas fa-plus-circle"></i>
+        </div>
+
+        <div class="Seccion-Tarea">
+            <h3>Estas son tus tareas pendientes</h3>
+            <ul id="lista"></ul>
+        </div>
+
+    </div>
+
 </div>
 
- <div class="Agregar-tarea">
-    <input type="text" id="input" placeholder="Agreagr una tarea">
-    <i id="enter" class="fas fa-plus-circle"></i>
- </div>
+<script>
+// ================= LOGIN =================
+const loginDiv = document.getElementById("login");
+const appDiv = document.getElementById("app");
 
+const usuarioGuardado = localStorage.getItem("usuario");
 
- <div class="Seccion-Tarea"></div>
-      <h3>Estas son tus tareas pendientes</h3>
-      <ul id="lista">
-      <li>
-        <i class="fas fa-plus-circle"></i>
-        <i class="fas fa-edit edit"></i>
-        <i class="fas fa-trash delete"></i>        
+if (usuarioGuardado) {
+    iniciarApp(usuarioGuardado);
+}
 
+document.getElementById("loginBtn").addEventListener("click", () => {
+    const usuario = document.getElementById("usuario").value;
+    const password = document.getElementById("password").value;
 
+    // Simulación de backend
+    if (usuario === "admin" && password === "123") {
+        localStorage.setItem("usuario", usuario);
+        iniciarApp(usuario);
+    } else {
+        alert("Credenciales incorrectas");
+    }
+});
 
-      </li></ul>
+function iniciarApp(usuario) {
+    loginDiv.style.display = "none";
+    appDiv.style.display = "block";
 
+    document.getElementById("bienvenida").textContent = `Bienvenido, ${usuario}`;
+    document.getElementById("fecha").textContent =
+        new Date().toLocaleDateString("es-MX", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
 
+    iniciarGestor();
+}
 
-     
-      
+// ================= GESTOR DE TAREAS =================
+class Tarea {
+    constructor(nombre, completa = false, id = Date.now()) {
+        this.nombre = nombre;
+        this.completa = completa;
+        this.id = id;
+    }
 
- </div>
+    toggleCompleta() {
+        this.completa = !this.completa;
+    }
 
+    editar(nuevoNombre) {
+        this.nombre = nuevoNombre;
+    }
+}
 
+class GestorDeTareas {
+    constructor() {
+        this.lista = document.getElementById("lista");
+        this.tareas = this.cargarTareas();
+        this.render();
+    }
 
-<script src="app.js"></script>
+    guardarTareas() {
+        localStorage.setItem("tareas", JSON.stringify(this.tareas));
+    }
+
+    cargarTareas() {
+        const data = localStorage.getItem("tareas");
+        return data
+            ? JSON.parse(data).map(t => new Tarea(t.nombre, t.completa, t.id))
+            : [];
+    }
+
+    agregarTarea(nombre) {
+        if (nombre.trim() === "") return;
+        this.tareas.push(new Tarea(nombre));
+        this.guardarTareas();
+        this.render();
+    }
+
+    eliminarTarea(id) {
+        this.tareas = this.tareas.filter(t => t.id !== id);
+        this.guardarTareas();
+        this.render();
+    }
+
+    editarTarea(id) {
+        const tarea = this.tareas.find(t => t.id === id);
+        const nuevoNombre = prompt("Editar tarea:", tarea.nombre);
+        if (nuevoNombre?.trim()) {
+            tarea.editar(nuevoNombre);
+            this.guardarTareas();
+            this.render();
+        }
+    }
+
+    completarTarea(id) {
+        const tarea = this.tareas.find(t => t.id === id);
+        tarea.toggleCompleta();
+        this.guardarTareas();
+        this.render();
+    }
+
+    render() {
+        this.lista.innerHTML = "";
+        this.tareas.forEach(t => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <i class="fas fa-check-circle ${t.completa ? 'checked' : ''}" data-id="${t.id}"></i>
+                <p class="${t.completa ? 'line-through' : ''}">${t.nombre}</p>
+                <i class="fas fa-edit edit" data-id="${t.id}"></i>
+                <i class="fas fa-trash delete" data-id="${t.id}"></i>
+            `;
+            this.lista.appendChild(li);
+        });
+        this.agregarEventos();
+    }
+
+    agregarEventos() {
+        document.querySelectorAll(".delete").forEach(b =>
+            b.onclick = () => this.eliminarTarea(Number(b.dataset.id))
+        );
+        document.querySelectorAll(".edit").forEach(b =>
+            b.onclick = () => this.editarTarea(Number(b.dataset.id))
+        );
+        document.querySelectorAll(".fa-check-circle").forEach(b =>
+            b.onclick = () => this.completarTarea(Number(b.dataset.id))
+        );
+    }
+}
+
+let gestor;
+
+function iniciarGestor() {
+    gestor = new GestorDeTareas();
+
+    const input = document.getElementById("input");
+    const boton = document.getElementById("enter");
+
+    boton.onclick = () => {
+        gestor.agregarTarea(input.value);
+        input.value = "";
+    };
+
+    input.addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+            gestor.agregarTarea(input.value);
+            input.value = "";
+        }
+    });
+}
+</script>
+
 </body>
 </html>
