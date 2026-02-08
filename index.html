@@ -2,13 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="create.js">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
+    <link rel="stylesheet" href="diseño gestor.css"
+    <title></title>
 </head>
 <body>
     
+<div class="container">
+
+
+ <div class="Perfil">
+     <div class="fecha">25 de enero del 2026</div>
+     <h1>Gestor Tareas</h1>
+     <span>Agrega la tarea a realizar</span>
     
+</div>
+
+ <div class="Agregar-tarea">
+    <input type="text" id="input" placeholder="Agreagr una tarea">
+    <i id="enter" class="fas fa-plus-circle"></i>
+ </div>
+
+
+ <div class="Seccion-Tarea"></div>
+      <h3>Estas son tus tareas pendientes</h3>
+      <ul id="lista">
+      <li>
+        <i class="fas fa-plus-circle"></i>
+        <i class="fas fa-edit edit"></i>
+        <i class="fas fa-trash delete"></i>        
+
+
+
+      </li></ul>
+
+
+
+     
+      
+
+ </div>
+
+
+
+<script src="app.js"></script>
 </body>
 </html>

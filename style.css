@@ -1,0 +1,122 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Prompt", sans-serif;
+}
+
+:root {
+    --fondo: #ffffff;
+    --morado: #7b2cbf;
+    --rosa: #ff4dff;
+    --gris: #f4f4fb;
+}
+
+body {
+    background: var(--fondo);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 360px;
+    text-align: center;
+}
+.Perfil h1 {
+    color: var(--morado);
+    margin-bottom: 5px;
+}
+
+.Perfil span {
+    color: #9d4edd;
+    font-size: 14px;
+}
+
+.fecha {
+    color: #c77dff;
+    margin-bottom: 10px;
+}
+
+.Agregar-tarea {
+    background: var(--gris);
+    border-radius: 15px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.Agregar-tarea input {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    padding: 10px;
+    outline: none;
+    background:
+        linear-gradient(white, white) padding-box,
+        linear-gradient(135deg, var(--rosa), var(--morado)) border-box;
+}
+
+.Agregar-tarea i {
+    font-size: 35px;
+    cursor: pointer;
+    color: var(--morado);
+    transition: transform 0.2s ease;
+}
+
+.Agregar-tarea i:hover {
+    transform: scale(1.2);
+    color: var(--rosa);
+}
+
+.Seccion-Tarea h3 {
+    color: var(--morado);
+    margin-bottom: 10px;
+}
+
+#lista {
+    list-style: none;
+}
+
+#lista li {
+    background: var(--gris);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--morado);
+}
+
+
+.fa-check-circle {
+    cursor: pointer;
+    color: #bbb;
+}
+
+.fa-check-circle.checked {
+    color: var(--rosa);
+}
+
+
+.edit, .delete {
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.delete {
+    color: #ff006e;
+}
+
+
+.line-through {
+    text-decoration: line-through;
+    color: #aaa;
+}
+    
